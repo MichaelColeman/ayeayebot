@@ -2,7 +2,7 @@ import { REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const commandID = "1092204791427502172";
+const commandID = "ENTER COMMAND ID HERE";
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
