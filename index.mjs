@@ -1,5 +1,6 @@
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import { fileURLToPath, pathToFileURL } from "url";
+import { Configuration, OpenAIApi } from "openai";
 import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
@@ -67,5 +68,43 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   } catch (error) {
     console.log(`big error here ${error}`);
+  }
+});
+
+//
+// AI STUFF
+//
+
+client.on("messageCreate", async (message) => {
+  if (!message.mentions.has(client.user)) {
+    return;
+  }
+  const userMessage = message.content.replace(/<.*?>/, "").trim();
+  // await message.reply(`generating reponse to "${userMessage}"...`);
+
+  try {
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_TOKEN,
+    });
+
+    const openai = new OpenAIApi(configuration);
+
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "you are a happy, helpful, drunken pirate who speaks with thick pirate slang. stay within 2000 characters in your response, please!",
+        },
+        { role: "user", content: userMessage },
+      ],
+    });
+
+    await message.react("👋");
+    await message.reply(completion.data.choices[0].message.content);
+    // console.log(completion.data.choices[0].message.content);
+  } catch (error) {
+    console.log(error);
   }
 });

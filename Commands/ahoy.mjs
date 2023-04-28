@@ -5,5 +5,4 @@ const data = new SlashCommandBuilder().setName("ahoy").setDescription("Replies w
 async function execute(interaction) {
   await interaction.reply("Matey!");
 }
-
 export { data, execute };

@@ -1,41 +1,33 @@
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import path from "path";
 
-//expose environment variables
 dotenv.config();
 
-//get current file path and directory
-const __filename = import.meta.url;
-const __dirname = path.dirname(__filename);
-
-//grab all command files from the commands directory
+//make array of command  from the commands directory
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".mjs"));
 
-//create an array of import statements that the promise.all method can call.
-const importCommands = commandFiles.map((commandFile) => {});
+const commands = [];
+//create a array of command json
+for (const file of commandFiles) {
+  const filePath = path.join(commandsPath, file);
+  console.log(filePath);
+  await import(pathToFileURL(filePath))
+    .then((command) => {
+      console.log(command.data.toJSON());
+      commands.push(command.data.toJSON());
+    })
+    .catch((error) => console.log(`error at ${filePath}: ${error}`));
+}
 
-// for (const file of commandFiles) {
-//   console.log(file);
-
-//   const filePath = `file:\\\\\\` + path.join(commandsPath, file);
-//   console.log(filePath);
-//     import(filePath)
-//       .then((command) => {
-//         // console.log(command.data.toJSON());
-//         commands.push(command.data.toJSON());
-//         //commands is empty!! WTF. async problem
-//       })
-//       .catch((error) => console.log(`error at ${filePath}: ${error}`));
-// }
-
-//construct an instance of the rest module
+// // construct an instance of the rest module
 // const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
-//deploy commands
+// // deploy commands
 // (async () => {
 //   console.log(commands);
 //   try {
