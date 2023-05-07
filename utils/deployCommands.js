@@ -1,5 +1,4 @@
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 import fs from "node:fs";
 import path from "path";

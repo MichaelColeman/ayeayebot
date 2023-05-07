@@ -80,7 +80,7 @@ client.on("messageCreate", async (message) => {
     return;
   }
   const userMessage = message.content.replace(/<.*?>/, "").trim();
-  // await message.reply(`generating reponse to "${userMessage}"...`);
+  message.reply(`generating reponse to "${userMessage}"...`);
 
   try {
     const configuration = new Configuration({
@@ -94,8 +94,7 @@ client.on("messageCreate", async (message) => {
       messages: [
         {
           role: "system",
-          content:
-            "you are a happy, helpful, drunken pirate who speaks with thick pirate slang. stay within 2000 characters in your response, please!",
+          content: "you are a happy, helpful, drunken pirate who speaks with thick pirate slang.",
         },
         { role: "user", content: userMessage },
       ],
